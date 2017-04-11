@@ -1,0 +1,670 @@
+  [1m[35m (5382.3ms)[0m  [1m[35mDROP DATABASE IF EXISTS "shine_test"[0m
+  [1m[35m (444.2ms)[0m  [1m[35mDROP DATABASE IF EXISTS "shine_test"[0m
+  [1m[35m (119.6ms)[0m  [1m[35mCREATE TABLE "schema_migrations" ("version" character varying PRIMARY KEY)[0m
+  [1m[35m (23.8ms)[0m  [1m[35mCREATE TABLE "ar_internal_metadata" ("key" character varying PRIMARY KEY, "value" character varying, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL)[0m
+  [1m[35m (0.0ms)[0m  [1m[34mSELECT pg_try_advisory_lock(762724099001649330);[0m
+  [1m[36mActiveRecord::SchemaMigration Load (2.0ms)[0m  [1m[34mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+Migrating to DeviseCreateUsers (20170326201659)
+  [1m[35m (1.0ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (42.7ms)[0m  [1m[35mCREATE TABLE "users" ("id" serial primary key, "email" character varying DEFAULT '' NOT NULL, "encrypted_password" character varying DEFAULT '' NOT NULL, "reset_password_token" character varying, "reset_password_sent_at" timestamp, "remember_created_at" timestamp, "sign_in_count" integer DEFAULT 0 NOT NULL, "current_sign_in_at" timestamp, "last_sign_in_at" timestamp, "current_sign_in_ip" inet, "last_sign_in_ip" inet, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL)[0m
+  [1m[35m (11.1ms)[0m  [1m[35mCREATE UNIQUE INDEX  "index_users_on_email" ON "users"  ("email")[0m
+  [1m[35m (12.6ms)[0m  [1m[35mCREATE UNIQUE INDEX  "index_users_on_reset_password_token" ON "users"  ("reset_password_token")[0m
+  [1m[35mSQL (18.2ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ($1) RETURNING "version"[0m  [["version", "20170326201659"]]
+  [1m[35m (1.0ms)[0m  [1m[35mCOMMIT[0m
+Migrating to AddEmailConstraintToUsers (20170328010155)
+  [1m[35m (1.0ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (5.9ms)[0m  [1m[35m
+			ALTER TABLE
+			users
+			ADD CONSTRAINT
+			email_must_be_company_email
+			CHECK ( email ~* '^[^@]+@example\.com' )
+		[0m
+  [1m[35mSQL (1.0ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ($1) RETURNING "version"[0m  [["version", "20170328010155"]]
+  [1m[35m (1.0ms)[0m  [1m[35mCOMMIT[0m
+Migrating to CreateCustomers (20170330011444)
+  [1m[35m (0.0ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (24.0ms)[0m  [1m[35mCREATE TABLE "customers" ("id" serial primary key, "first_name" character varying NOT NULL, "last_name" character varying NOT NULL, "email" character varying NOT NULL, "username" character varying NOT NULL, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL)[0m
+  [1m[35m (9.0ms)[0m  [1m[35mCREATE UNIQUE INDEX  "index_customers_on_email" ON "customers"  ("email")[0m
+  [1m[35m (10.0ms)[0m  [1m[35mCREATE UNIQUE INDEX  "index_customers_on_username" ON "customers"  ("username")[0m
+  [1m[35mSQL (1.0ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ($1) RETURNING "version"[0m  [["version", "20170330011444"]]
+  [1m[35m (2.0ms)[0m  [1m[35mCOMMIT[0m
+Migrating to AddLowerIndexesToCustomers (20170401145739)
+  [1m[35m (0.0ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (14.0ms)[0m  [1m[35m
+			CREATE INDEX
+			customers_lower_last_name
+			ON
+			customers (lower(last_name) varchar_pattern_ops)
+		[0m
+  [1m[35m (11.4ms)[0m  [1m[35m
+			CREATE INDEX
+			customers_lower_first_name
+			ON
+			customers (lower(first_name) varchar_pattern_ops)
+		[0m
+  [1m[35m (11.0ms)[0m  [1m[35m
+			CREATE INDEX
+			customers_lower_email
+			ON
+			customers (lower(email))
+		[0m
+  [1m[35mSQL (1.0ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ($1) RETURNING "version"[0m  [["version", "20170401145739"]]
+  [1m[35m (2.0ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mActiveRecord::InternalMetadata Load (17.9ms)[0m  [1m[34mSELECT  "ar_internal_metadata".* FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = $1 LIMIT $2[0m  [["key", :environment], ["LIMIT", 1]]
+  [1m[35m (0.0ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (543.0ms)[0m  [1m[32mINSERT INTO "ar_internal_metadata" ("key", "value", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "key"[0m  [["key", "environment"], ["value", "test"], ["created_at", 2017-04-04 01:03:37 UTC], ["updated_at", 2017-04-04 01:03:37 UTC]]
+  [1m[35m (3.0ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.0ms)[0m  [1m[34mSELECT pg_advisory_unlock(762724099001649330)[0m
+  [1m[35m (1.0ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY version[0m
+  [1m[36mActiveRecord::SchemaMigration Load (1.0ms)[0m  [1m[34mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[35m (1.0ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.0ms)[0m  [1m[31mROLLBACK[0m
+  [1m[35m (0.0ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (1.0ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mActiveRecord::SchemaMigration Load (1.0ms)[0m  [1m[34mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[35m (0.0ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mUser Exists (3.3ms)[0m  [1m[34mSELECT  1 AS one FROM "users" WHERE "users"."email" = $1 LIMIT $2[0m  [["email", "foo@example.com"], ["LIMIT", 1]]
+  [1m[35mSQL (3.0ms)[0m  [1m[32mINSERT INTO "users" ("email", "encrypted_password", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["email", "foo@example.com"], ["encrypted_password", "$2a$04$rLhLJlkOky9iAgIGKrgRL.OC5/ZF.JZcR/ElSM2Q63Pssn6Fudbfu"], ["created_at", 2017-04-04 01:14:05 UTC], ["updated_at", 2017-04-04 01:14:05 UTC]]
+  [1m[35m (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[35mSQL (1.0ms)[0m  [1m[33mUPDATE "users" SET "email" = $1, "updated_at" = $2 WHERE "users"."id" = $3[0m  [["email", "foo@bar.com"], ["updated_at", 2017-04-04 01:14:05 UTC], ["id", 1]]
+  [1m[35m (1.0ms)[0m  [1m[31mROLLBACK TO SAVEPOINT active_record_1[0m
+  [1m[35m (1.0ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mActiveRecord::SchemaMigration Load (2.0ms)[0m  [1m[34mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[35m (1.0ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (1.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mUser Exists (1.0ms)[0m  [1m[34mSELECT  1 AS one FROM "users" WHERE "users"."email" = $1 LIMIT $2[0m  [["email", "foo@example.com"], ["LIMIT", 1]]
+  [1m[35mSQL (2.0ms)[0m  [1m[32mINSERT INTO "users" ("email", "encrypted_password", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["email", "foo@example.com"], ["encrypted_password", "$2a$04$nuVpWkGLN295T3BTYw/3JeVZJ/.kvvSnFLqeNrmA2qFBVuQkYN6Ou"], ["created_at", 2017-04-04 01:20:25 UTC], ["updated_at", 2017-04-04 01:20:25 UTC]]
+  [1m[35m (1.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[35mSQL (1.0ms)[0m  [1m[33mUPDATE "users" SET "email" = $1, "updated_at" = $2 WHERE "users"."id" = $3[0m  [["email", "foo@bar.com"], ["updated_at", 2017-04-04 01:20:25 UTC], ["id", 2]]
+  [1m[35m (1.0ms)[0m  [1m[31mROLLBACK TO SAVEPOINT active_record_1[0m
+  [1m[35m (1.0ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mActiveRecord::SchemaMigration Load (1.0ms)[0m  [1m[34mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[35m (1.0ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (3.7ms)[0m  [1m[35mALTER TABLE "schema_migrations" DISABLE TRIGGER ALL;ALTER TABLE "ar_internal_metadata" DISABLE TRIGGER ALL;ALTER TABLE "users" DISABLE TRIGGER ALL;ALTER TABLE "customers" DISABLE TRIGGER ALL[0m
+  [1m[35m (0.0ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (1.0ms)[0m  [1m[34m          SELECT schemaname || '.' || tablename
+          FROM pg_tables
+          WHERE
+            tablename !~ '_prt_' AND
+            tablename <> 'schema_migrations' AND
+            schemaname = ANY (current_schemas(false))
+[0m
+  [1m[35m (9.0ms)[0m  [1m[34mselect table_name from information_schema.views where table_schema = 'shine_test'[0m
+  [1m[35m (156.2ms)[0m  [1m[35mTRUNCATE TABLE "public"."ar_internal_metadata", "public"."users", "public"."customers" RESTART IDENTITY CASCADE;[0m
+  [1m[35m (1.0ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (1.0ms)[0m  [1m[35mALTER TABLE "schema_migrations" ENABLE TRIGGER ALL;ALTER TABLE "ar_internal_metadata" ENABLE TRIGGER ALL;ALTER TABLE "users" ENABLE TRIGGER ALL;ALTER TABLE "customers" ENABLE TRIGGER ALL[0m
+  [1m[35m (0.0ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (1.0ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mUser Exists (45.4ms)[0m  [1m[34mSELECT  1 AS one FROM "users" WHERE "users"."email" = $1 LIMIT $2[0m  [["email", "bob@example.com"], ["LIMIT", 1]]
+  [1m[35mSQL (7.0ms)[0m  [1m[32mINSERT INTO "users" ("email", "encrypted_password", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["email", "bob@example.com"], ["encrypted_password", "$2a$04$wUShZ0zLOMGl0hcTdQglhOD1CI4r6ldvO57f3XF9j5cpHwgMl9T4C"], ["created_at", 2017-04-04 01:58:04 UTC], ["updated_at", 2017-04-04 01:58:04 UTC]]
+  [1m[35m (2.0ms)[0m  [1m[35mCOMMIT[0m
+Started GET "/angular_test" for 127.0.0.1 at 2017-04-03 21:58:08 -0400
+Processing by AngularTestController#index as HTML
+Completed 401 Unauthorized in 25ms (ActiveRecord: 0.0ms)
+Started GET "/users/sign_in" for 127.0.0.1 at 2017-04-03 21:58:08 -0400
+Processing by Devise::SessionsController#new as HTML
+  Rendering devise/sessions/new.html.erb within layouts/application
+  Rendered devise/shared/_links.html.erb (1.0ms)
+  Rendered devise/sessions/new.html.erb within layouts/application (191.1ms)
+Completed 200 OK in 10210ms (Views: 10206.7ms | ActiveRecord: 0.0ms)
+Started GET "/assets/application-cd881eb11094a90e72946fe1bed55eff7bfc88baab1c882518f3c1afd63ac86f.js" for 127.0.0.1 at 2017-04-03 21:58:19 -0400
+Started GET "/assets/application-1cc2173513a57b578f3c402fd3fb74e0478509e4ef0c122f73436313ca424ba4.css" for 127.0.0.1 at 2017-04-03 21:58:19 -0400
+Started POST "/users/sign_in" for 127.0.0.1 at 2017-04-03 21:58:19 -0400
+Processing by Devise::SessionsController#create as HTML
+  Parameters: {"utf8"=>"✓", "user"=>{"email"=>"bob@example.com", "password"=>"[FILTERED]", "remember_me"=>"0"}, "commit"=>"Log in"}
+  [1m[36mUser Load (2.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."email" = $1 ORDER BY "users"."id" ASC LIMIT $2[0m  [["email", "bob@example.com"], ["LIMIT", 1]]
+  [1m[35m (1.0ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (1.0ms)[0m  [1m[33mUPDATE "users" SET "current_sign_in_at" = $1, "last_sign_in_at" = $2, "current_sign_in_ip" = $3, "last_sign_in_ip" = $4, "sign_in_count" = $5, "updated_at" = $6 WHERE "users"."id" = $7[0m  [["current_sign_in_at", 2017-04-04 01:58:19 UTC], ["last_sign_in_at", 2017-04-04 01:58:19 UTC], ["current_sign_in_ip", "127.0.0.1/32"], ["last_sign_in_ip", "127.0.0.1/32"], ["sign_in_count", 1], ["updated_at", 2017-04-04 01:58:19 UTC], ["id", 1]]
+  [1m[35m (2.0ms)[0m  [1m[35mCOMMIT[0m
+Redirected to http://127.0.0.1:53950/angular_test
+Completed 302 Found in 235ms (ActiveRecord: 15.0ms)
+Started GET "/angular_test" for 127.0.0.1 at 2017-04-03 21:58:20 -0400
+Processing by AngularTestController#index as HTML
+  [1m[36mUser Load (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 ORDER BY "users"."id" ASC LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  Rendering angular_test/index.html.erb within layouts/application
+  Rendered angular_test/index.html.erb within layouts/application (1.0ms)
+Completed 200 OK in 91ms (Views: 70.0ms | ActiveRecord: 0.0ms)
+  [1m[35m (0.0ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (1.0ms)[0m  [1m[35mALTER TABLE "schema_migrations" DISABLE TRIGGER ALL;ALTER TABLE "ar_internal_metadata" DISABLE TRIGGER ALL;ALTER TABLE "users" DISABLE TRIGGER ALL;ALTER TABLE "customers" DISABLE TRIGGER ALL[0m
+  [1m[35m (0.0ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (126.3ms)[0m  [1m[35mTRUNCATE TABLE "public"."ar_internal_metadata", "public"."users", "public"."customers" RESTART IDENTITY CASCADE;[0m
+  [1m[35m (0.0ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (1.0ms)[0m  [1m[35mALTER TABLE "schema_migrations" ENABLE TRIGGER ALL;ALTER TABLE "ar_internal_metadata" ENABLE TRIGGER ALL;ALTER TABLE "users" ENABLE TRIGGER ALL;ALTER TABLE "customers" ENABLE TRIGGER ALL[0m
+  [1m[35m (0.0ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mActiveRecord::SchemaMigration Load (1.0ms)[0m  [1m[34mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[35m (1.0ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (1.0ms)[0m  [1m[35mALTER TABLE "schema_migrations" DISABLE TRIGGER ALL;ALTER TABLE "ar_internal_metadata" DISABLE TRIGGER ALL;ALTER TABLE "users" DISABLE TRIGGER ALL;ALTER TABLE "customers" DISABLE TRIGGER ALL[0m
+  [1m[35m (1.0ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (1.0ms)[0m  [1m[34m          SELECT schemaname || '.' || tablename
+          FROM pg_tables
+          WHERE
+            tablename !~ '_prt_' AND
+            tablename <> 'schema_migrations' AND
+            schemaname = ANY (current_schemas(false))
+[0m
+  [1m[35m (2.0ms)[0m  [1m[34mselect table_name from information_schema.views where table_schema = 'shine_test'[0m
+  [1m[35m (139.7ms)[0m  [1m[35mTRUNCATE TABLE "public"."ar_internal_metadata", "public"."users", "public"."customers" RESTART IDENTITY CASCADE;[0m
+  [1m[35m (1.0ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (1.0ms)[0m  [1m[35mALTER TABLE "schema_migrations" ENABLE TRIGGER ALL;ALTER TABLE "ar_internal_metadata" ENABLE TRIGGER ALL;ALTER TABLE "users" ENABLE TRIGGER ALL;ALTER TABLE "customers" ENABLE TRIGGER ALL[0m
+  [1m[35m (0.0ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (1.0ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mUser Exists (2.0ms)[0m  [1m[34mSELECT  1 AS one FROM "users" WHERE "users"."email" = $1 LIMIT $2[0m  [["email", "bob@example.com"], ["LIMIT", 1]]
+  [1m[35mSQL (2.0ms)[0m  [1m[32mINSERT INTO "users" ("email", "encrypted_password", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["email", "bob@example.com"], ["encrypted_password", "$2a$04$XneNnGWIkUR3ENtv4RXHHufax8uOpRk/E0sE5Si9hiLGFtod3Bt4u"], ["created_at", 2017-04-04 02:17:38 UTC], ["updated_at", 2017-04-04 02:17:38 UTC]]
+  [1m[35m (1.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (1.0ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (9.0ms)[0m  [1m[32mINSERT INTO "customers" ("first_name", "last_name", "email", "username", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6) RETURNING "id"[0m  [["first_name", "Robert"], ["last_name", "Aaron"], ["email", "branson.rau129@ritchieconn.io"], ["username", "crawford_rice942"], ["created_at", 2017-04-04 02:17:38 UTC], ["updated_at", 2017-04-04 02:17:38 UTC]]
+  [1m[35m (0.0ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.0ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.0ms)[0m  [1m[32mINSERT INTO "customers" ("first_name", "last_name", "email", "username", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6) RETURNING "id"[0m  [["first_name", "Bob"], ["last_name", "Johnson"], ["email", "gaylord706@rowekunze.co"], ["username", "henderson714"], ["created_at", 2017-04-04 02:17:38 UTC], ["updated_at", 2017-04-04 02:17:38 UTC]]
+  [1m[35m (0.0ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.0ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.0ms)[0m  [1m[32mINSERT INTO "customers" ("first_name", "last_name", "email", "username", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6) RETURNING "id"[0m  [["first_name", "JR"], ["last_name", "Bob"], ["email", "mackenzie_smith602@collier.info"], ["username", "eulalia.tremblay485"], ["created_at", 2017-04-04 02:17:38 UTC], ["updated_at", 2017-04-04 02:17:38 UTC]]
+  [1m[35m (0.0ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.0ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (1.0ms)[0m  [1m[32mINSERT INTO "customers" ("first_name", "last_name", "email", "username", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6) RETURNING "id"[0m  [["first_name", "Bobby"], ["last_name", "Dobbs"], ["email", "maeve_hyatt992@glover.biz"], ["username", "emory353"], ["created_at", 2017-04-04 02:17:38 UTC], ["updated_at", 2017-04-04 02:17:38 UTC]]
+  [1m[35m (1.0ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (1.0ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (1.0ms)[0m  [1m[32mINSERT INTO "customers" ("first_name", "last_name", "email", "username", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6) RETURNING "id"[0m  [["first_name", "Bob"], ["last_name", "Jones"], ["email", "bob123@somewhere.net"], ["username", "josianne_durgan519"], ["created_at", 2017-04-04 02:17:38 UTC], ["updated_at", 2017-04-04 02:17:38 UTC]]
+  [1m[35m (0.0ms)[0m  [1m[35mCOMMIT[0m
+Started GET "/customers" for 127.0.0.1 at 2017-04-03 22:17:42 -0400
+Processing by CustomersController#index as HTML
+Completed 401 Unauthorized in 23ms (ActiveRecord: 0.0ms)
+Started GET "/users/sign_in" for 127.0.0.1 at 2017-04-03 22:17:42 -0400
+Processing by Devise::SessionsController#new as HTML
+  Rendering devise/sessions/new.html.erb within layouts/application
+  Rendered devise/shared/_links.html.erb (2.0ms)
+  Rendered devise/sessions/new.html.erb within layouts/application (64.2ms)
+Completed 200 OK in 502ms (Views: 499.6ms | ActiveRecord: 0.0ms)
+Started GET "/assets/application-1cc2173513a57b578f3c402fd3fb74e0478509e4ef0c122f73436313ca424ba4.css" for 127.0.0.1 at 2017-04-03 22:17:42 -0400
+Started GET "/assets/application-cd881eb11094a90e72946fe1bed55eff7bfc88baab1c882518f3c1afd63ac86f.js" for 127.0.0.1 at 2017-04-03 22:17:42 -0400
+Started POST "/users/sign_in" for 127.0.0.1 at 2017-04-03 22:17:43 -0400
+Processing by Devise::SessionsController#create as HTML
+  Parameters: {"utf8"=>"✓", "user"=>{"email"=>"bob@example.com", "password"=>"[FILTERED]", "remember_me"=>"0"}, "commit"=>"Log in"}
+  [1m[36mUser Load (1.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."email" = $1 ORDER BY "users"."id" ASC LIMIT $2[0m  [["email", "bob@example.com"], ["LIMIT", 1]]
+  [1m[35m (0.0ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (1.0ms)[0m  [1m[33mUPDATE "users" SET "current_sign_in_at" = $1, "last_sign_in_at" = $2, "current_sign_in_ip" = $3, "last_sign_in_ip" = $4, "sign_in_count" = $5, "updated_at" = $6 WHERE "users"."id" = $7[0m  [["current_sign_in_at", 2017-04-04 02:17:43 UTC], ["last_sign_in_at", 2017-04-04 02:17:43 UTC], ["current_sign_in_ip", "127.0.0.1/32"], ["last_sign_in_ip", "127.0.0.1/32"], ["sign_in_count", 1], ["updated_at", 2017-04-04 02:17:43 UTC], ["id", 1]]
+  [1m[35m (5.5ms)[0m  [1m[35mCOMMIT[0m
+Redirected to http://127.0.0.1:54201/customers
+Completed 302 Found in 227ms (ActiveRecord: 14.5ms)
+Started GET "/customers" for 127.0.0.1 at 2017-04-03 22:17:43 -0400
+Processing by CustomersController#index as HTML
+  [1m[36mUser Load (1.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 ORDER BY "users"."id" ASC LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  Rendering customers/index.html.erb within layouts/application
+  Rendered customers/_pager.html.erb (0.5ms)
+  Rendered customers/_pager.html.erb (0.0ms)
+  Rendered customers/index.html.erb within layouts/application (61.2ms)
+Completed 200 OK in 212ms (Views: 189.6ms | ActiveRecord: 1.0ms)
+Started GET "/customers.json?keywords=bob123@somewhere.net&page=0" for 127.0.0.1 at 2017-04-03 22:17:43 -0400
+Processing by CustomersController#index as JSON
+  Parameters: {"keywords"=>"bob123@somewhere.net", "page"=>"0"}
+  [1m[36mUser Load (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 ORDER BY "users"."id" ASC LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mCustomer Load (4.4ms)[0m  [1m[34mSELECT  "customers".* FROM "customers" WHERE (lower(first_name) like 'bob%' OR lower(last_name) like 'bob%' OR lower(email) like 'bob123@somewhere.net') ORDER BY lower(email) = 'bob123@somewhere.net' desc, last_name asc LIMIT $1 OFFSET $2[0m  [["LIMIT", 10], ["OFFSET", 0]]
+Completed 200 OK in 16ms (Views: 4.4ms | ActiveRecord: 4.4ms)
+  [1m[35m (0.0ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.0ms)[0m  [1m[35mALTER TABLE "schema_migrations" DISABLE TRIGGER ALL;ALTER TABLE "ar_internal_metadata" DISABLE TRIGGER ALL;ALTER TABLE "users" DISABLE TRIGGER ALL;ALTER TABLE "customers" DISABLE TRIGGER ALL[0m
+  [1m[35m (1.0ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (121.2ms)[0m  [1m[35mTRUNCATE TABLE "public"."ar_internal_metadata", "public"."users", "public"."customers" RESTART IDENTITY CASCADE;[0m
+  [1m[35m (1.0ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (1.0ms)[0m  [1m[35mALTER TABLE "schema_migrations" ENABLE TRIGGER ALL;ALTER TABLE "ar_internal_metadata" ENABLE TRIGGER ALL;ALTER TABLE "users" ENABLE TRIGGER ALL;ALTER TABLE "customers" ENABLE TRIGGER ALL[0m
+  [1m[35m (0.0ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.0ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mUser Exists (1.0ms)[0m  [1m[34mSELECT  1 AS one FROM "users" WHERE "users"."email" = $1 LIMIT $2[0m  [["email", "bob@example.com"], ["LIMIT", 1]]
+  [1m[35mSQL (2.0ms)[0m  [1m[32mINSERT INTO "users" ("email", "encrypted_password", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["email", "bob@example.com"], ["encrypted_password", "$2a$04$/o2jSGFP8.F4ZbgkrQ8alurbWaN/bWwVLJfpFPihLvOoeuH6tuMSy"], ["created_at", 2017-04-04 02:17:44 UTC], ["updated_at", 2017-04-04 02:17:44 UTC]]
+  [1m[35m (1.0ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.0ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (4.0ms)[0m  [1m[32mINSERT INTO "customers" ("first_name", "last_name", "email", "username", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6) RETURNING "id"[0m  [["first_name", "Robert"], ["last_name", "Aaron"], ["email", "magnolia992@wintheiserwunsch.io"], ["username", "rodrick.stanton838"], ["created_at", 2017-04-04 02:17:44 UTC], ["updated_at", 2017-04-04 02:17:44 UTC]]
+  [1m[35m (0.0ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (1.0ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (1.0ms)[0m  [1m[32mINSERT INTO "customers" ("first_name", "last_name", "email", "username", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6) RETURNING "id"[0m  [["first_name", "Bob"], ["last_name", "Johnson"], ["email", "johan451@stoltenberg.io"], ["username", "ruben_green501"], ["created_at", 2017-04-04 02:17:44 UTC], ["updated_at", 2017-04-04 02:17:44 UTC]]
+  [1m[35m (1.0ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (1.6ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.0ms)[0m  [1m[32mINSERT INTO "customers" ("first_name", "last_name", "email", "username", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6) RETURNING "id"[0m  [["first_name", "JR"], ["last_name", "Bob"], ["email", "denis630@watsicacarroll.name"], ["username", "carmine.leannon461"], ["created_at", 2017-04-04 02:17:44 UTC], ["updated_at", 2017-04-04 02:17:44 UTC]]
+  [1m[35m (1.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (1.0ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.0ms)[0m  [1m[32mINSERT INTO "customers" ("first_name", "last_name", "email", "username", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6) RETURNING "id"[0m  [["first_name", "Bobby"], ["last_name", "Dobbs"], ["email", "camylle.corwin621@smith.net"], ["username", "lillian428"], ["created_at", 2017-04-04 02:17:44 UTC], ["updated_at", 2017-04-04 02:17:44 UTC]]
+  [1m[35m (1.0ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.0ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (1.0ms)[0m  [1m[32mINSERT INTO "customers" ("first_name", "last_name", "email", "username", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6) RETURNING "id"[0m  [["first_name", "Bob"], ["last_name", "Jones"], ["email", "bob123@somewhere.net"], ["username", "audie98"], ["created_at", 2017-04-04 02:17:44 UTC], ["updated_at", 2017-04-04 02:17:44 UTC]]
+  [1m[35m (1.0ms)[0m  [1m[35mCOMMIT[0m
+Started GET "/customers" for 127.0.0.1 at 2017-04-03 22:17:44 -0400
+Processing by CustomersController#index as HTML
+Completed 401 Unauthorized in 0ms (ActiveRecord: 0.0ms)
+Started GET "/users/sign_in" for 127.0.0.1 at 2017-04-03 22:17:44 -0400
+Processing by Devise::SessionsController#new as HTML
+  Rendering devise/sessions/new.html.erb within layouts/application
+  Rendered devise/shared/_links.html.erb (1.0ms)
+  Rendered devise/sessions/new.html.erb within layouts/application (23.1ms)
+Completed 200 OK in 157ms (Views: 155.2ms | ActiveRecord: 0.0ms)
+Started POST "/users/sign_in" for 127.0.0.1 at 2017-04-03 22:17:44 -0400
+Processing by Devise::SessionsController#create as HTML
+  Parameters: {"utf8"=>"✓", "user"=>{"email"=>"bob@example.com", "password"=>"[FILTERED]", "remember_me"=>"0"}, "commit"=>"Log in"}
+  [1m[36mUser Load (1.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."email" = $1 ORDER BY "users"."id" ASC LIMIT $2[0m  [["email", "bob@example.com"], ["LIMIT", 1]]
+  [1m[35m (0.0ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (1.0ms)[0m  [1m[33mUPDATE "users" SET "current_sign_in_at" = $1, "last_sign_in_at" = $2, "current_sign_in_ip" = $3, "last_sign_in_ip" = $4, "sign_in_count" = $5, "updated_at" = $6 WHERE "users"."id" = $7[0m  [["current_sign_in_at", 2017-04-04 02:17:44 UTC], ["last_sign_in_at", 2017-04-04 02:17:44 UTC], ["current_sign_in_ip", "127.0.0.1/32"], ["last_sign_in_ip", "127.0.0.1/32"], ["sign_in_count", 1], ["updated_at", 2017-04-04 02:17:44 UTC], ["id", 1]]
+  [1m[35m (2.0ms)[0m  [1m[35mCOMMIT[0m
+Redirected to http://127.0.0.1:54201/customers
+Completed 302 Found in 160ms (ActiveRecord: 4.0ms)
+Started GET "/customers" for 127.0.0.1 at 2017-04-03 22:17:45 -0400
+Processing by CustomersController#index as HTML
+  [1m[36mUser Load (1.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 ORDER BY "users"."id" ASC LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  Rendering customers/index.html.erb within layouts/application
+  Rendered customers/_pager.html.erb (0.0ms)
+  Rendered customers/_pager.html.erb (0.0ms)
+  Rendered customers/index.html.erb within layouts/application (20.0ms)
+Completed 200 OK in 107ms (Views: 85.5ms | ActiveRecord: 1.0ms)
+Started GET "/customers.json?keywords=bob&page=0" for 127.0.0.1 at 2017-04-03 22:17:45 -0400
+Processing by CustomersController#index as JSON
+  Parameters: {"keywords"=>"bob", "page"=>"0"}
+  [1m[36mUser Load (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 ORDER BY "users"."id" ASC LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mCustomer Load (4.0ms)[0m  [1m[34mSELECT  "customers".* FROM "customers" WHERE (lower(first_name) like 'bob%' OR lower(last_name) like 'bob%') ORDER BY last_name asc LIMIT $1 OFFSET $2[0m  [["LIMIT", 10], ["OFFSET", 0]]
+Completed 200 OK in 12ms (Views: 4.0ms | ActiveRecord: 4.0ms)
+  [1m[35m (0.0ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (1.0ms)[0m  [1m[35mALTER TABLE "schema_migrations" DISABLE TRIGGER ALL;ALTER TABLE "ar_internal_metadata" DISABLE TRIGGER ALL;ALTER TABLE "users" DISABLE TRIGGER ALL;ALTER TABLE "customers" DISABLE TRIGGER ALL[0m
+  [1m[35m (1.0ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (2.0ms)[0m  [1m[34m          SELECT schemaname || '.' || tablename
+          FROM pg_tables
+          WHERE
+            tablename !~ '_prt_' AND
+            tablename <> 'schema_migrations' AND
+            schemaname = ANY (current_schemas(false))
+[0m
+  [1m[35m (2.0ms)[0m  [1m[34mselect table_name from information_schema.views where table_schema = 'shine_test'[0m
+  [1m[35m (118.3ms)[0m  [1m[35mTRUNCATE TABLE "public"."ar_internal_metadata", "public"."users", "public"."customers" RESTART IDENTITY CASCADE;[0m
+  [1m[35m (1.0ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (1.0ms)[0m  [1m[35mALTER TABLE "schema_migrations" ENABLE TRIGGER ALL;ALTER TABLE "ar_internal_metadata" ENABLE TRIGGER ALL;ALTER TABLE "users" ENABLE TRIGGER ALL;ALTER TABLE "customers" ENABLE TRIGGER ALL[0m
+  [1m[35m (0.0ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mActiveRecord::SchemaMigration Load (4.8ms)[0m  [1m[34mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[35m (0.5ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (5.2ms)[0m  [1m[35mALTER TABLE "schema_migrations" DISABLE TRIGGER ALL;ALTER TABLE "ar_internal_metadata" DISABLE TRIGGER ALL;ALTER TABLE "users" DISABLE TRIGGER ALL;ALTER TABLE "customers" DISABLE TRIGGER ALL[0m
+  [1m[35m (0.5ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (1.5ms)[0m  [1m[34m          SELECT schemaname || '.' || tablename
+          FROM pg_tables
+          WHERE
+            tablename !~ '_prt_' AND
+            tablename <> 'schema_migrations' AND
+            schemaname = ANY (current_schemas(false))
+[0m
+  [1m[35m (4.7ms)[0m  [1m[34mselect table_name from information_schema.views where table_schema = 'shine_test'[0m
+  [1m[35m (136.5ms)[0m  [1m[35mTRUNCATE TABLE "public"."ar_internal_metadata", "public"."users", "public"."customers" RESTART IDENTITY CASCADE;[0m
+  [1m[35m (0.8ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.5ms)[0m  [1m[35mALTER TABLE "schema_migrations" ENABLE TRIGGER ALL;ALTER TABLE "ar_internal_metadata" ENABLE TRIGGER ALL;ALTER TABLE "users" ENABLE TRIGGER ALL;ALTER TABLE "customers" ENABLE TRIGGER ALL[0m
+  [1m[35m (0.5ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.5ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mUser Exists (1.5ms)[0m  [1m[34mSELECT  1 AS one FROM "users" WHERE "users"."email" = $1 LIMIT $2[0m  [["email", "bob@example.com"], ["LIMIT", 1]]
+  [1m[35mSQL (2.5ms)[0m  [1m[32mINSERT INTO "users" ("email", "encrypted_password", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["email", "bob@example.com"], ["encrypted_password", "$2a$04$LgtZ1AqQufDQ8KkFaM2RcOSVDcjinf/N1ahXt9nDom3yDdppxNAiS"], ["created_at", 2017-04-04 22:30:32 UTC], ["updated_at", 2017-04-04 22:30:32 UTC]]
+  [1m[35m (1.4ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.5ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (3.0ms)[0m  [1m[32mINSERT INTO "customers" ("first_name", "last_name", "email", "username", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6) RETURNING "id"[0m  [["first_name", "Robert"], ["last_name", "Aaron"], ["email", "noble.parker744@littelschmitt.org"], ["username", "kamille45"], ["created_at", 2017-04-04 22:30:33 UTC], ["updated_at", 2017-04-04 22:30:33 UTC]]
+  [1m[35m (0.5ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.5ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.5ms)[0m  [1m[32mINSERT INTO "customers" ("first_name", "last_name", "email", "username", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6) RETURNING "id"[0m  [["first_name", "Bob"], ["last_name", "Johnson"], ["email", "edwina.oreilly585@hegmann.info"], ["username", "daphne_spencer970"], ["created_at", 2017-04-04 22:30:33 UTC], ["updated_at", 2017-04-04 22:30:33 UTC]]
+  [1m[35m (0.5ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.5ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.5ms)[0m  [1m[32mINSERT INTO "customers" ("first_name", "last_name", "email", "username", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6) RETURNING "id"[0m  [["first_name", "JR"], ["last_name", "Bob"], ["email", "brielle482@abbott.name"], ["username", "mckayla.wyman140"], ["created_at", 2017-04-04 22:30:33 UTC], ["updated_at", 2017-04-04 22:30:33 UTC]]
+  [1m[35m (0.9ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.5ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.5ms)[0m  [1m[32mINSERT INTO "customers" ("first_name", "last_name", "email", "username", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6) RETURNING "id"[0m  [["first_name", "Bobby"], ["last_name", "Dobbs"], ["email", "rhoda136@fahey.biz"], ["username", "isaiah99"], ["created_at", 2017-04-04 22:30:33 UTC], ["updated_at", 2017-04-04 22:30:33 UTC]]
+  [1m[35m (0.8ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.5ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.5ms)[0m  [1m[32mINSERT INTO "customers" ("first_name", "last_name", "email", "username", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6) RETURNING "id"[0m  [["first_name", "Bob"], ["last_name", "Jones"], ["email", "bob123@somewhere.net"], ["username", "nora993"], ["created_at", 2017-04-04 22:30:33 UTC], ["updated_at", 2017-04-04 22:30:33 UTC]]
+  [1m[35m (0.8ms)[0m  [1m[35mCOMMIT[0m
+Started GET "/customers" for 127.0.0.1 at 2017-04-04 18:30:37 -0400
+Processing by CustomersController#index as HTML
+Completed 401 Unauthorized in 26ms (ActiveRecord: 0.0ms)
+Started GET "/users/sign_in" for 127.0.0.1 at 2017-04-04 18:30:37 -0400
+Processing by Devise::SessionsController#new as HTML
+  Rendering devise/sessions/new.html.erb within layouts/application
+  Rendered devise/shared/_links.html.erb (1.5ms)
+  Rendered devise/sessions/new.html.erb within layouts/application (98.0ms)
+Completed 200 OK in 12609ms (Views: 12604.6ms | ActiveRecord: 0.0ms)
+Started GET "/assets/application-1cc2173513a57b578f3c402fd3fb74e0478509e4ef0c122f73436313ca424ba4.css" for 127.0.0.1 at 2017-04-04 18:30:49 -0400
+Started GET "/assets/application-cd881eb11094a90e72946fe1bed55eff7bfc88baab1c882518f3c1afd63ac86f.js" for 127.0.0.1 at 2017-04-04 18:30:49 -0400
+Started POST "/users/sign_in" for 127.0.0.1 at 2017-04-04 18:30:50 -0400
+Processing by Devise::SessionsController#create as HTML
+  Parameters: {"utf8"=>"✓", "user"=>{"email"=>"bob@example.com", "password"=>"[FILTERED]", "remember_me"=>"0"}, "commit"=>"Log in"}
+  [1m[36mUser Load (2.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."email" = $1 ORDER BY "users"."id" ASC LIMIT $2[0m  [["email", "bob@example.com"], ["LIMIT", 1]]
+  [1m[35m (0.5ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.5ms)[0m  [1m[33mUPDATE "users" SET "current_sign_in_at" = $1, "last_sign_in_at" = $2, "current_sign_in_ip" = $3, "last_sign_in_ip" = $4, "sign_in_count" = $5, "updated_at" = $6 WHERE "users"."id" = $7[0m  [["current_sign_in_at", 2017-04-04 22:30:50 UTC], ["last_sign_in_at", 2017-04-04 22:30:50 UTC], ["current_sign_in_ip", "127.0.0.1/32"], ["last_sign_in_ip", "127.0.0.1/32"], ["sign_in_count", 1], ["updated_at", 2017-04-04 22:30:50 UTC], ["id", 1]]
+  [1m[35m (3.5ms)[0m  [1m[35mCOMMIT[0m
+Redirected to http://127.0.0.1:62747/customers
+Completed 302 Found in 309ms (ActiveRecord: 12.5ms)
+Started GET "/customers" for 127.0.0.1 at 2017-04-04 18:30:50 -0400
+Processing by CustomersController#index as HTML
+  [1m[36mUser Load (0.5ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 ORDER BY "users"."id" ASC LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  Rendering customers/index.html.erb within layouts/application
+  Rendered customers/_pager.html.erb (0.0ms)
+  Rendered customers/_pager.html.erb (0.0ms)
+  Rendered customers/index.html.erb within layouts/application (19.6ms)
+Completed 200 OK in 133ms (Views: 110.6ms | ActiveRecord: 0.5ms)
+Started GET "/customers.json?keywords=bob&page=0" for 127.0.0.1 at 2017-04-04 18:30:51 -0400
+Processing by CustomersController#index as JSON
+  Parameters: {"keywords"=>"bob", "page"=>"0"}
+  [1m[36mUser Load (0.5ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 ORDER BY "users"."id" ASC LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mCustomer Load (2.5ms)[0m  [1m[34mSELECT  "customers".* FROM "customers" WHERE (lower(first_name) like 'bob%' OR lower(last_name) like 'bob%') ORDER BY last_name asc LIMIT $1 OFFSET $2[0m  [["LIMIT", 10], ["OFFSET", 0]]
+Completed 200 OK in 16ms (Views: 5.6ms | ActiveRecord: 3.0ms)
+  [1m[35m (0.5ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.5ms)[0m  [1m[35mALTER TABLE "schema_migrations" DISABLE TRIGGER ALL;ALTER TABLE "ar_internal_metadata" DISABLE TRIGGER ALL;ALTER TABLE "users" DISABLE TRIGGER ALL;ALTER TABLE "customers" DISABLE TRIGGER ALL[0m
+  [1m[35m (0.5ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (166.9ms)[0m  [1m[35mTRUNCATE TABLE "public"."ar_internal_metadata", "public"."users", "public"."customers" RESTART IDENTITY CASCADE;[0m
+  [1m[35m (1.0ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.5ms)[0m  [1m[35mALTER TABLE "schema_migrations" ENABLE TRIGGER ALL;ALTER TABLE "ar_internal_metadata" ENABLE TRIGGER ALL;ALTER TABLE "users" ENABLE TRIGGER ALL;ALTER TABLE "customers" ENABLE TRIGGER ALL[0m
+  [1m[35m (0.0ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.5ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mUser Exists (2.0ms)[0m  [1m[34mSELECT  1 AS one FROM "users" WHERE "users"."email" = $1 LIMIT $2[0m  [["email", "bob@example.com"], ["LIMIT", 1]]
+  [1m[35mSQL (2.0ms)[0m  [1m[32mINSERT INTO "users" ("email", "encrypted_password", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["email", "bob@example.com"], ["encrypted_password", "$2a$04$axklKgLmLnrDotPnWqawHuZQM6ZbSTjMeJz04Oi2sYfCN4QLXI5ee"], ["created_at", 2017-04-04 22:30:51 UTC], ["updated_at", 2017-04-04 22:30:51 UTC]]
+  [1m[35m (0.5ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.5ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (3.5ms)[0m  [1m[32mINSERT INTO "customers" ("first_name", "last_name", "email", "username", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6) RETURNING "id"[0m  [["first_name", "Robert"], ["last_name", "Aaron"], ["email", "luna_ratke156@oberbrunnerfranecki.name"], ["username", "julianne399"], ["created_at", 2017-04-04 22:30:51 UTC], ["updated_at", 2017-04-04 22:30:51 UTC]]
+  [1m[35m (1.0ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.0ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.5ms)[0m  [1m[32mINSERT INTO "customers" ("first_name", "last_name", "email", "username", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6) RETURNING "id"[0m  [["first_name", "Bob"], ["last_name", "Johnson"], ["email", "charles272@toykohler.info"], ["username", "remington593"], ["created_at", 2017-04-04 22:30:51 UTC], ["updated_at", 2017-04-04 22:30:51 UTC]]
+  [1m[35m (0.5ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.0ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.5ms)[0m  [1m[32mINSERT INTO "customers" ("first_name", "last_name", "email", "username", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6) RETURNING "id"[0m  [["first_name", "JR"], ["last_name", "Bob"], ["email", "louisa726@osinski.org"], ["username", "mark.smith550"], ["created_at", 2017-04-04 22:30:51 UTC], ["updated_at", 2017-04-04 22:30:51 UTC]]
+  [1m[35m (0.5ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.5ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.5ms)[0m  [1m[32mINSERT INTO "customers" ("first_name", "last_name", "email", "username", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6) RETURNING "id"[0m  [["first_name", "Bobby"], ["last_name", "Dobbs"], ["email", "halle_block861@keeblerwitting.net"], ["username", "caitlyn_pacocha243"], ["created_at", 2017-04-04 22:30:51 UTC], ["updated_at", 2017-04-04 22:30:51 UTC]]
+  [1m[35m (0.5ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.5ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.5ms)[0m  [1m[32mINSERT INTO "customers" ("first_name", "last_name", "email", "username", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6) RETURNING "id"[0m  [["first_name", "Bob"], ["last_name", "Jones"], ["email", "bob123@somewhere.net"], ["username", "devyn.hoeger174"], ["created_at", 2017-04-04 22:30:51 UTC], ["updated_at", 2017-04-04 22:30:51 UTC]]
+  [1m[35m (0.5ms)[0m  [1m[35mCOMMIT[0m
+Started GET "/customers" for 127.0.0.1 at 2017-04-04 18:30:51 -0400
+Processing by CustomersController#index as HTML
+Completed 401 Unauthorized in 1ms (ActiveRecord: 0.0ms)
+Started GET "/users/sign_in" for 127.0.0.1 at 2017-04-04 18:30:51 -0400
+Processing by Devise::SessionsController#new as HTML
+  Rendering devise/sessions/new.html.erb within layouts/application
+  Rendered devise/shared/_links.html.erb (1.0ms)
+  Rendered devise/sessions/new.html.erb within layouts/application (23.1ms)
+Completed 200 OK in 203ms (Views: 202.3ms | ActiveRecord: 0.0ms)
+Started POST "/users/sign_in" for 127.0.0.1 at 2017-04-04 18:30:52 -0400
+Processing by Devise::SessionsController#create as HTML
+  Parameters: {"utf8"=>"✓", "user"=>{"email"=>"bob@example.com", "password"=>"[FILTERED]", "remember_me"=>"0"}, "commit"=>"Log in"}
+  [1m[36mUser Load (2.5ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."email" = $1 ORDER BY "users"."id" ASC LIMIT $2[0m  [["email", "bob@example.com"], ["LIMIT", 1]]
+  [1m[35m (0.5ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.5ms)[0m  [1m[33mUPDATE "users" SET "current_sign_in_at" = $1, "last_sign_in_at" = $2, "current_sign_in_ip" = $3, "last_sign_in_ip" = $4, "sign_in_count" = $5, "updated_at" = $6 WHERE "users"."id" = $7[0m  [["current_sign_in_at", 2017-04-04 22:30:52 UTC], ["last_sign_in_at", 2017-04-04 22:30:52 UTC], ["current_sign_in_ip", "127.0.0.1/32"], ["last_sign_in_ip", "127.0.0.1/32"], ["sign_in_count", 1], ["updated_at", 2017-04-04 22:30:52 UTC], ["id", 1]]
+  [1m[35m (1.5ms)[0m  [1m[35mCOMMIT[0m
+Redirected to http://127.0.0.1:62747/customers
+Completed 302 Found in 234ms (ActiveRecord: 5.0ms)
+Started GET "/customers" for 127.0.0.1 at 2017-04-04 18:30:52 -0400
+Processing by CustomersController#index as HTML
+  [1m[36mUser Load (0.5ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 ORDER BY "users"."id" ASC LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  Rendering customers/index.html.erb within layouts/application
+  Rendered customers/_pager.html.erb (0.5ms)
+  Rendered customers/_pager.html.erb (0.0ms)
+  Rendered customers/index.html.erb within layouts/application (19.1ms)
+Completed 200 OK in 132ms (Views: 111.8ms | ActiveRecord: 0.5ms)
+Started GET "/customers.json?keywords=bob123@somewhere.net&page=0" for 127.0.0.1 at 2017-04-04 18:30:52 -0400
+Processing by CustomersController#index as JSON
+  Parameters: {"keywords"=>"bob123@somewhere.net", "page"=>"0"}
+  [1m[36mUser Load (0.5ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 ORDER BY "users"."id" ASC LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mCustomer Load (3.0ms)[0m  [1m[34mSELECT  "customers".* FROM "customers" WHERE (lower(first_name) like 'bob%' OR lower(last_name) like 'bob%' OR lower(email) like 'bob123@somewhere.net') ORDER BY lower(email) = 'bob123@somewhere.net' desc, last_name asc LIMIT $1 OFFSET $2[0m  [["LIMIT", 10], ["OFFSET", 0]]
+Completed 200 OK in 9ms (Views: 2.5ms | ActiveRecord: 3.5ms)
+  [1m[35m (0.5ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (1.0ms)[0m  [1m[35mALTER TABLE "schema_migrations" DISABLE TRIGGER ALL;ALTER TABLE "ar_internal_metadata" DISABLE TRIGGER ALL;ALTER TABLE "users" DISABLE TRIGGER ALL;ALTER TABLE "customers" DISABLE TRIGGER ALL[0m
+  [1m[35m (0.5ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (2.0ms)[0m  [1m[34m          SELECT schemaname || '.' || tablename
+          FROM pg_tables
+          WHERE
+            tablename !~ '_prt_' AND
+            tablename <> 'schema_migrations' AND
+            schemaname = ANY (current_schemas(false))
+[0m
+  [1m[35m (2.0ms)[0m  [1m[34mselect table_name from information_schema.views where table_schema = 'shine_test'[0m
+  [1m[35m (142.6ms)[0m  [1m[35mTRUNCATE TABLE "public"."ar_internal_metadata", "public"."users", "public"."customers" RESTART IDENTITY CASCADE;[0m
+  [1m[35m (1.0ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.7ms)[0m  [1m[35mALTER TABLE "schema_migrations" ENABLE TRIGGER ALL;ALTER TABLE "ar_internal_metadata" ENABLE TRIGGER ALL;ALTER TABLE "users" ENABLE TRIGGER ALL;ALTER TABLE "customers" ENABLE TRIGGER ALL[0m
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.5ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mUser Exists (1.5ms)[0m  [1m[34mSELECT  1 AS one FROM "users" WHERE "users"."email" = $1 LIMIT $2[0m  [["email", "bob@example.com"], ["LIMIT", 1]]
+  [1m[35mSQL (2.0ms)[0m  [1m[32mINSERT INTO "users" ("email", "encrypted_password", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["email", "bob@example.com"], ["encrypted_password", "$2a$04$oSi.p08QR1jwj6GCAHvUdOttXJ5QxAX9DnveDcRvLvROxCDVurDyS"], ["created_at", 2017-04-04 22:30:53 UTC], ["updated_at", 2017-04-04 22:30:53 UTC]]
+  [1m[35m (1.0ms)[0m  [1m[35mCOMMIT[0m
+Started GET "/angular_test" for 127.0.0.1 at 2017-04-04 18:30:53 -0400
+Processing by AngularTestController#index as HTML
+Completed 401 Unauthorized in 1ms (ActiveRecord: 0.0ms)
+Started GET "/users/sign_in" for 127.0.0.1 at 2017-04-04 18:30:53 -0400
+Processing by Devise::SessionsController#new as HTML
+  Rendering devise/sessions/new.html.erb within layouts/application
+  Rendered devise/shared/_links.html.erb (1.0ms)
+  Rendered devise/sessions/new.html.erb within layouts/application (23.1ms)
+Completed 200 OK in 213ms (Views: 212.4ms | ActiveRecord: 0.0ms)
+Started POST "/users/sign_in" for 127.0.0.1 at 2017-04-04 18:30:53 -0400
+Processing by Devise::SessionsController#create as HTML
+  Parameters: {"utf8"=>"✓", "user"=>{"email"=>"bob@example.com", "password"=>"[FILTERED]", "remember_me"=>"0"}, "commit"=>"Log in"}
+  [1m[36mUser Load (1.5ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."email" = $1 ORDER BY "users"."id" ASC LIMIT $2[0m  [["email", "bob@example.com"], ["LIMIT", 1]]
+  [1m[35m (0.0ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.5ms)[0m  [1m[33mUPDATE "users" SET "current_sign_in_at" = $1, "last_sign_in_at" = $2, "current_sign_in_ip" = $3, "last_sign_in_ip" = $4, "sign_in_count" = $5, "updated_at" = $6 WHERE "users"."id" = $7[0m  [["current_sign_in_at", 2017-04-04 22:30:53 UTC], ["last_sign_in_at", 2017-04-04 22:30:53 UTC], ["current_sign_in_ip", "127.0.0.1/32"], ["last_sign_in_ip", "127.0.0.1/32"], ["sign_in_count", 1], ["updated_at", 2017-04-04 22:30:53 UTC], ["id", 1]]
+  [1m[35m (2.0ms)[0m  [1m[35mCOMMIT[0m
+Redirected to http://127.0.0.1:62747/angular_test
+Completed 302 Found in 232ms (ActiveRecord: 4.0ms)
+Started GET "/angular_test" for 127.0.0.1 at 2017-04-04 18:30:54 -0400
+Processing by AngularTestController#index as HTML
+  [1m[36mUser Load (0.5ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 ORDER BY "users"."id" ASC LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  Rendering angular_test/index.html.erb within layouts/application
+  Rendered angular_test/index.html.erb within layouts/application (0.5ms)
+Completed 200 OK in 110ms (Views: 89.5ms | ActiveRecord: 0.5ms)
+  [1m[35m (0.5ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.0ms)[0m  [1m[35mALTER TABLE "schema_migrations" DISABLE TRIGGER ALL;ALTER TABLE "ar_internal_metadata" DISABLE TRIGGER ALL;ALTER TABLE "users" DISABLE TRIGGER ALL;ALTER TABLE "customers" DISABLE TRIGGER ALL[0m
+  [1m[35m (0.0ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (133.2ms)[0m  [1m[35mTRUNCATE TABLE "public"."ar_internal_metadata", "public"."users", "public"."customers" RESTART IDENTITY CASCADE;[0m
+  [1m[35m (1.0ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.5ms)[0m  [1m[35mALTER TABLE "schema_migrations" ENABLE TRIGGER ALL;ALTER TABLE "ar_internal_metadata" ENABLE TRIGGER ALL;ALTER TABLE "users" ENABLE TRIGGER ALL;ALTER TABLE "customers" ENABLE TRIGGER ALL[0m
+  [1m[35m (0.0ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.5ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.5ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.5ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.5ms)[0m  [1m[31mROLLBACK[0m
+  [1m[35m (0.0ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.5ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.5ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.5ms)[0m  [1m[31mROLLBACK[0m
+  [1m[35m (0.5ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.0ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.7ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.5ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mUser Exists (1.0ms)[0m  [1m[34mSELECT  1 AS one FROM "users" WHERE "users"."email" = $1 LIMIT $2[0m  [["email", "foo@example.com"], ["LIMIT", 1]]
+  [1m[35mSQL (2.0ms)[0m  [1m[32mINSERT INTO "users" ("email", "encrypted_password", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["email", "foo@example.com"], ["encrypted_password", "$2a$04$wmAJYXkcbSIRqmRvmbJFbeZ9E30WmUOoq1OFEyIbJ1zT/xYiAcknm"], ["created_at", 2017-04-04 22:30:54 UTC], ["updated_at", 2017-04-04 22:30:54 UTC]]
+  [1m[35m (0.5ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.5ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[35mSQL (3.0ms)[0m  [1m[33mUPDATE "users" SET "email" = $1, "updated_at" = $2 WHERE "users"."id" = $3[0m  [["email", "foo@bar.com"], ["updated_at", 2017-04-04 22:30:54 UTC], ["id", 1]]
+  [1m[35m (0.5ms)[0m  [1m[31mROLLBACK TO SAVEPOINT active_record_1[0m
+  [1m[35m (0.5ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mActiveRecord::SchemaMigration Load (1.5ms)[0m  [1m[34mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[35m (0.0ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.5ms)[0m  [1m[35mALTER TABLE "schema_migrations" DISABLE TRIGGER ALL;ALTER TABLE "ar_internal_metadata" DISABLE TRIGGER ALL;ALTER TABLE "users" DISABLE TRIGGER ALL;ALTER TABLE "customers" DISABLE TRIGGER ALL[0m
+  [1m[35m (0.0ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (1.5ms)[0m  [1m[34m          SELECT schemaname || '.' || tablename
+          FROM pg_tables
+          WHERE
+            tablename !~ '_prt_' AND
+            tablename <> 'schema_migrations' AND
+            schemaname = ANY (current_schemas(false))
+[0m
+  [1m[35m (1.5ms)[0m  [1m[34mselect table_name from information_schema.views where table_schema = 'shine_test'[0m
+  [1m[35m (139.2ms)[0m  [1m[35mTRUNCATE TABLE "public"."ar_internal_metadata", "public"."users", "public"."customers" RESTART IDENTITY CASCADE;[0m
+  [1m[35m (1.0ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.5ms)[0m  [1m[35mALTER TABLE "ar_internal_metadata" ENABLE TRIGGER ALL;ALTER TABLE "schema_migrations" ENABLE TRIGGER ALL;ALTER TABLE "users" ENABLE TRIGGER ALL;ALTER TABLE "customers" ENABLE TRIGGER ALL[0m
+  [1m[35m (0.0ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.5ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mUser Exists (2.0ms)[0m  [1m[34mSELECT  1 AS one FROM "users" WHERE "users"."email" = $1 LIMIT $2[0m  [["email", "bob@example.com"], ["LIMIT", 1]]
+  [1m[35mSQL (1.5ms)[0m  [1m[32mINSERT INTO "users" ("email", "encrypted_password", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["email", "bob@example.com"], ["encrypted_password", "$2a$04$zerrHl1D6qmy2RwQtjTSOeG9hzXv408hBEw5FL7YCnBdztppniMCG"], ["created_at", 2017-04-04 22:34:07 UTC], ["updated_at", 2017-04-04 22:34:07 UTC]]
+  [1m[35m (3.1ms)[0m  [1m[35mCOMMIT[0m
+Started GET "/angular_test" for 127.0.0.1 at 2017-04-04 18:34:11 -0400
+Processing by AngularTestController#index as HTML
+Completed 401 Unauthorized in 23ms (ActiveRecord: 0.0ms)
+Started GET "/users/sign_in" for 127.0.0.1 at 2017-04-04 18:34:11 -0400
+Processing by Devise::SessionsController#new as HTML
+  Rendering devise/sessions/new.html.erb within layouts/application
+  Rendered devise/shared/_links.html.erb (1.5ms)
+  Rendered devise/sessions/new.html.erb within layouts/application (59.3ms)
+Completed 200 OK in 794ms (Views: 791.7ms | ActiveRecord: 0.0ms)
+Started GET "/assets/application-1cc2173513a57b578f3c402fd3fb74e0478509e4ef0c122f73436313ca424ba4.css" for 127.0.0.1 at 2017-04-04 18:34:12 -0400
+Started GET "/assets/application-cd881eb11094a90e72946fe1bed55eff7bfc88baab1c882518f3c1afd63ac86f.js" for 127.0.0.1 at 2017-04-04 18:34:12 -0400
+Started POST "/users/sign_in" for 127.0.0.1 at 2017-04-04 18:34:13 -0400
+Processing by Devise::SessionsController#create as HTML
+  Parameters: {"utf8"=>"✓", "user"=>{"email"=>"bob@example.com", "password"=>"[FILTERED]", "remember_me"=>"0"}, "commit"=>"Log in"}
+  [1m[36mUser Load (2.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."email" = $1 ORDER BY "users"."id" ASC LIMIT $2[0m  [["email", "bob@example.com"], ["LIMIT", 1]]
+  [1m[35m (0.5ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (1.4ms)[0m  [1m[33mUPDATE "users" SET "current_sign_in_at" = $1, "last_sign_in_at" = $2, "current_sign_in_ip" = $3, "last_sign_in_ip" = $4, "sign_in_count" = $5, "updated_at" = $6 WHERE "users"."id" = $7[0m  [["current_sign_in_at", 2017-04-04 22:34:13 UTC], ["last_sign_in_at", 2017-04-04 22:34:13 UTC], ["current_sign_in_ip", "127.0.0.1/32"], ["last_sign_in_ip", "127.0.0.1/32"], ["sign_in_count", 1], ["updated_at", 2017-04-04 22:34:13 UTC], ["id", 1]]
+  [1m[35m (2.3ms)[0m  [1m[35mCOMMIT[0m
+Redirected to http://127.0.0.1:62776/angular_test
+Completed 302 Found in 298ms (ActiveRecord: 12.2ms)
+Started GET "/angular_test" for 127.0.0.1 at 2017-04-04 18:34:13 -0400
+Processing by AngularTestController#index as HTML
+  [1m[36mUser Load (1.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 ORDER BY "users"."id" ASC LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  Rendering angular_test/index.html.erb within layouts/application
+  Rendered angular_test/index.html.erb within layouts/application (0.5ms)
+Completed 200 OK in 115ms (Views: 93.6ms | ActiveRecord: 1.0ms)
+  [1m[35m (0.5ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.0ms)[0m  [1m[35mALTER TABLE "ar_internal_metadata" DISABLE TRIGGER ALL;ALTER TABLE "schema_migrations" DISABLE TRIGGER ALL;ALTER TABLE "users" DISABLE TRIGGER ALL;ALTER TABLE "customers" DISABLE TRIGGER ALL[0m
+  [1m[35m (0.0ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (133.1ms)[0m  [1m[35mTRUNCATE TABLE "public"."ar_internal_metadata", "public"."users", "public"."customers" RESTART IDENTITY CASCADE;[0m
+  [1m[35m (0.5ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.5ms)[0m  [1m[35mALTER TABLE "schema_migrations" ENABLE TRIGGER ALL;ALTER TABLE "ar_internal_metadata" ENABLE TRIGGER ALL;ALTER TABLE "users" ENABLE TRIGGER ALL;ALTER TABLE "customers" ENABLE TRIGGER ALL[0m
+  [1m[35m (0.5ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mActiveRecord::SchemaMigration Load (1.0ms)[0m  [1m[34mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[35m (0.5ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.5ms)[0m  [1m[35mALTER TABLE "schema_migrations" DISABLE TRIGGER ALL;ALTER TABLE "ar_internal_metadata" DISABLE TRIGGER ALL;ALTER TABLE "users" DISABLE TRIGGER ALL;ALTER TABLE "customers" DISABLE TRIGGER ALL[0m
+  [1m[35m (0.0ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (1.5ms)[0m  [1m[34m          SELECT schemaname || '.' || tablename
+          FROM pg_tables
+          WHERE
+            tablename !~ '_prt_' AND
+            tablename <> 'schema_migrations' AND
+            schemaname = ANY (current_schemas(false))
+[0m
+  [1m[35m (2.0ms)[0m  [1m[34mselect table_name from information_schema.views where table_schema = 'shine_test'[0m
+  [1m[35m (127.5ms)[0m  [1m[35mTRUNCATE TABLE "public"."ar_internal_metadata", "public"."users", "public"."customers" RESTART IDENTITY CASCADE;[0m
+  [1m[35m (1.0ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.5ms)[0m  [1m[35mALTER TABLE "schema_migrations" ENABLE TRIGGER ALL;ALTER TABLE "ar_internal_metadata" ENABLE TRIGGER ALL;ALTER TABLE "users" ENABLE TRIGGER ALL;ALTER TABLE "customers" ENABLE TRIGGER ALL[0m
+  [1m[35m (0.5ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.0ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mUser Exists (2.0ms)[0m  [1m[34mSELECT  1 AS one FROM "users" WHERE "users"."email" = $1 LIMIT $2[0m  [["email", "bob@example.com"], ["LIMIT", 1]]
+  [1m[35mSQL (2.0ms)[0m  [1m[32mINSERT INTO "users" ("email", "encrypted_password", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["email", "bob@example.com"], ["encrypted_password", "$2a$04$aQ3DggGLIqpzVUSqgHWTxOe0V8LR.Ucvnak.YXqIX5CbcrfBqBmni"], ["created_at", 2017-04-04 22:35:08 UTC], ["updated_at", 2017-04-04 22:35:08 UTC]]
+  [1m[35m (2.5ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.5ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (3.5ms)[0m  [1m[32mINSERT INTO "customers" ("first_name", "last_name", "email", "username", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6) RETURNING "id"[0m  [["first_name", "Robert"], ["last_name", "Aaron"], ["email", "lexie181@wolf.name"], ["username", "vinnie710"], ["created_at", 2017-04-04 22:35:08 UTC], ["updated_at", 2017-04-04 22:35:08 UTC]]
+  [1m[35m (10.4ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.5ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.5ms)[0m  [1m[32mINSERT INTO "customers" ("first_name", "last_name", "email", "username", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6) RETURNING "id"[0m  [["first_name", "Bob"], ["last_name", "Johnson"], ["email", "emerald470@rosenbaum.io"], ["username", "wava_cartwright964"], ["created_at", 2017-04-04 22:35:08 UTC], ["updated_at", 2017-04-04 22:35:08 UTC]]
+  [1m[35m (1.1ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.0ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.5ms)[0m  [1m[32mINSERT INTO "customers" ("first_name", "last_name", "email", "username", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6) RETURNING "id"[0m  [["first_name", "JR"], ["last_name", "Bob"], ["email", "desiree_zboncak351@durgangraham.org"], ["username", "claire921"], ["created_at", 2017-04-04 22:35:08 UTC], ["updated_at", 2017-04-04 22:35:08 UTC]]
+  [1m[35m (1.0ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.0ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.5ms)[0m  [1m[32mINSERT INTO "customers" ("first_name", "last_name", "email", "username", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6) RETURNING "id"[0m  [["first_name", "Bobby"], ["last_name", "Dobbs"], ["email", "nola.heathcote466@bartoletti.info"], ["username", "tara.hoeger477"], ["created_at", 2017-04-04 22:35:08 UTC], ["updated_at", 2017-04-04 22:35:08 UTC]]
+  [1m[35m (0.5ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.5ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (1.0ms)[0m  [1m[32mINSERT INTO "customers" ("first_name", "last_name", "email", "username", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6) RETURNING "id"[0m  [["first_name", "Bob"], ["last_name", "Jones"], ["email", "bob123@somewhere.net"], ["username", "myron964"], ["created_at", 2017-04-04 22:35:08 UTC], ["updated_at", 2017-04-04 22:35:08 UTC]]
+  [1m[35m (0.9ms)[0m  [1m[35mCOMMIT[0m
+Started GET "/customers" for 127.0.0.1 at 2017-04-04 18:35:12 -0400
+Processing by CustomersController#index as HTML
+Completed 401 Unauthorized in 22ms (ActiveRecord: 0.0ms)
+Started GET "/users/sign_in" for 127.0.0.1 at 2017-04-04 18:35:12 -0400
+Processing by Devise::SessionsController#new as HTML
+  Rendering devise/sessions/new.html.erb within layouts/application
+  Rendered devise/shared/_links.html.erb (1.0ms)
+  Rendered devise/sessions/new.html.erb within layouts/application (58.2ms)
+Completed 200 OK in 780ms (Views: 777.4ms | ActiveRecord: 0.0ms)
+Started GET "/assets/application-1cc2173513a57b578f3c402fd3fb74e0478509e4ef0c122f73436313ca424ba4.css" for 127.0.0.1 at 2017-04-04 18:35:13 -0400
+Started GET "/assets/application-cd881eb11094a90e72946fe1bed55eff7bfc88baab1c882518f3c1afd63ac86f.js" for 127.0.0.1 at 2017-04-04 18:35:13 -0400
+Started POST "/users/sign_in" for 127.0.0.1 at 2017-04-04 18:35:13 -0400
+Processing by Devise::SessionsController#create as HTML
+  Parameters: {"utf8"=>"✓", "user"=>{"email"=>"bob@example.com", "password"=>"[FILTERED]", "remember_me"=>"0"}, "commit"=>"Log in"}
+  [1m[36mUser Load (2.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."email" = $1 ORDER BY "users"."id" ASC LIMIT $2[0m  [["email", "bob@example.com"], ["LIMIT", 1]]
+  [1m[35m (0.8ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.5ms)[0m  [1m[33mUPDATE "users" SET "current_sign_in_at" = $1, "last_sign_in_at" = $2, "current_sign_in_ip" = $3, "last_sign_in_ip" = $4, "sign_in_count" = $5, "updated_at" = $6 WHERE "users"."id" = $7[0m  [["current_sign_in_at", 2017-04-04 22:35:13 UTC], ["last_sign_in_at", 2017-04-04 22:35:13 UTC], ["current_sign_in_ip", "127.0.0.1/32"], ["last_sign_in_ip", "127.0.0.1/32"], ["sign_in_count", 1], ["updated_at", 2017-04-04 22:35:13 UTC], ["id", 1]]
+  [1m[35m (3.4ms)[0m  [1m[35mCOMMIT[0m
+Redirected to http://127.0.0.1:62787/customers
+Completed 302 Found in 316ms (ActiveRecord: 13.2ms)
+Started GET "/customers" for 127.0.0.1 at 2017-04-04 18:35:13 -0400
+Processing by CustomersController#index as HTML
+  [1m[36mUser Load (0.5ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 ORDER BY "users"."id" ASC LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  Rendering customers/index.html.erb within layouts/application
+  Rendered customers/_pager.html.erb (0.5ms)
+  Rendered customers/_pager.html.erb (0.0ms)
+  Rendered customers/index.html.erb within layouts/application (22.6ms)
+Completed 200 OK in 139ms (Views: 117.6ms | ActiveRecord: 0.5ms)
+Started GET "/customers.json?keywords=bob123@somewhere.net&page=0" for 127.0.0.1 at 2017-04-04 18:35:14 -0400
+Processing by CustomersController#index as JSON
+  Parameters: {"keywords"=>"bob123@somewhere.net", "page"=>"0"}
+  [1m[36mUser Load (1.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 ORDER BY "users"."id" ASC LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mCustomer Load (4.0ms)[0m  [1m[34mSELECT  "customers".* FROM "customers" WHERE (lower(first_name) like 'bob%' OR lower(last_name) like 'bob%' OR lower(email) like 'bob123@somewhere.net') ORDER BY lower(email) = 'bob123@somewhere.net' desc, last_name asc LIMIT $1 OFFSET $2[0m  [["LIMIT", 10], ["OFFSET", 0]]
+Completed 200 OK in 14ms (Views: 3.8ms | ActiveRecord: 5.0ms)
+  [1m[35m (0.5ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.5ms)[0m  [1m[35mALTER TABLE "schema_migrations" DISABLE TRIGGER ALL;ALTER TABLE "ar_internal_metadata" DISABLE TRIGGER ALL;ALTER TABLE "users" DISABLE TRIGGER ALL;ALTER TABLE "customers" DISABLE TRIGGER ALL[0m
+  [1m[35m (0.5ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (146.2ms)[0m  [1m[35mTRUNCATE TABLE "public"."ar_internal_metadata", "public"."users", "public"."customers" RESTART IDENTITY CASCADE;[0m
+  [1m[35m (1.0ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.5ms)[0m  [1m[35mALTER TABLE "schema_migrations" ENABLE TRIGGER ALL;ALTER TABLE "ar_internal_metadata" ENABLE TRIGGER ALL;ALTER TABLE "users" ENABLE TRIGGER ALL;ALTER TABLE "customers" ENABLE TRIGGER ALL[0m
+  [1m[35m (0.5ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.9ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mUser Exists (1.5ms)[0m  [1m[34mSELECT  1 AS one FROM "users" WHERE "users"."email" = $1 LIMIT $2[0m  [["email", "bob@example.com"], ["LIMIT", 1]]
+  [1m[35mSQL (1.5ms)[0m  [1m[32mINSERT INTO "users" ("email", "encrypted_password", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["email", "bob@example.com"], ["encrypted_password", "$2a$04$xQiJTKQV07t9ekuQKzQZC.0Ht.zb0g10CaNoNbOG/56ph9FEJtTNC"], ["created_at", 2017-04-04 22:35:14 UTC], ["updated_at", 2017-04-04 22:35:14 UTC]]
+  [1m[35m (1.1ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.0ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (3.5ms)[0m  [1m[32mINSERT INTO "customers" ("first_name", "last_name", "email", "username", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6) RETURNING "id"[0m  [["first_name", "Robert"], ["last_name", "Aaron"], ["email", "lucile.murphy421@cronaluettgen.info"], ["username", "keshawn107"], ["created_at", 2017-04-04 22:35:14 UTC], ["updated_at", 2017-04-04 22:35:14 UTC]]
+  [1m[35m (1.0ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.5ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.5ms)[0m  [1m[32mINSERT INTO "customers" ("first_name", "last_name", "email", "username", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6) RETURNING "id"[0m  [["first_name", "Bob"], ["last_name", "Johnson"], ["email", "jana_jakubowski998@mosciski.net"], ["username", "raegan42"], ["created_at", 2017-04-04 22:35:14 UTC], ["updated_at", 2017-04-04 22:35:14 UTC]]
+  [1m[35m (0.6ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.5ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.5ms)[0m  [1m[32mINSERT INTO "customers" ("first_name", "last_name", "email", "username", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6) RETURNING "id"[0m  [["first_name", "JR"], ["last_name", "Bob"], ["email", "ryley883@bradtkespencer.biz"], ["username", "dominic693"], ["created_at", 2017-04-04 22:35:14 UTC], ["updated_at", 2017-04-04 22:35:14 UTC]]
+  [1m[35m (0.5ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.0ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.5ms)[0m  [1m[32mINSERT INTO "customers" ("first_name", "last_name", "email", "username", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6) RETURNING "id"[0m  [["first_name", "Bobby"], ["last_name", "Dobbs"], ["email", "allen_oconnell479@schuster.biz"], ["username", "brittany_maggio862"], ["created_at", 2017-04-04 22:35:14 UTC], ["updated_at", 2017-04-04 22:35:14 UTC]]
+  [1m[35m (0.5ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (1.0ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.5ms)[0m  [1m[32mINSERT INTO "customers" ("first_name", "last_name", "email", "username", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6) RETURNING "id"[0m  [["first_name", "Bob"], ["last_name", "Jones"], ["email", "bob123@somewhere.net"], ["username", "benton17"], ["created_at", 2017-04-04 22:35:14 UTC], ["updated_at", 2017-04-04 22:35:14 UTC]]
+  [1m[35m (0.5ms)[0m  [1m[35mCOMMIT[0m
+Started GET "/customers" for 127.0.0.1 at 2017-04-04 18:35:14 -0400
+Processing by CustomersController#index as HTML
+Completed 401 Unauthorized in 1ms (ActiveRecord: 0.0ms)
+Started GET "/users/sign_in" for 127.0.0.1 at 2017-04-04 18:35:14 -0400
+Processing by Devise::SessionsController#new as HTML
+  Rendering devise/sessions/new.html.erb within layouts/application
+  Rendered devise/shared/_links.html.erb (1.5ms)
+  Rendered devise/sessions/new.html.erb within layouts/application (23.7ms)
+Completed 200 OK in 207ms (Views: 205.3ms | ActiveRecord: 0.0ms)
+Started POST "/users/sign_in" for 127.0.0.1 at 2017-04-04 18:35:15 -0400
+Processing by Devise::SessionsController#create as HTML
+  Parameters: {"utf8"=>"✓", "user"=>{"email"=>"bob@example.com", "password"=>"[FILTERED]", "remember_me"=>"0"}, "commit"=>"Log in"}
+  [1m[36mUser Load (1.5ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."email" = $1 ORDER BY "users"."id" ASC LIMIT $2[0m  [["email", "bob@example.com"], ["LIMIT", 1]]
+  [1m[35m (0.0ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.5ms)[0m  [1m[33mUPDATE "users" SET "current_sign_in_at" = $1, "last_sign_in_at" = $2, "current_sign_in_ip" = $3, "last_sign_in_ip" = $4, "sign_in_count" = $5, "updated_at" = $6 WHERE "users"."id" = $7[0m  [["current_sign_in_at", 2017-04-04 22:35:15 UTC], ["last_sign_in_at", 2017-04-04 22:35:15 UTC], ["current_sign_in_ip", "127.0.0.1/32"], ["last_sign_in_ip", "127.0.0.1/32"], ["sign_in_count", 1], ["updated_at", 2017-04-04 22:35:15 UTC], ["id", 1]]
+  [1m[35m (0.8ms)[0m  [1m[35mCOMMIT[0m
+Redirected to http://127.0.0.1:62787/customers
+Completed 302 Found in 223ms (ActiveRecord: 2.8ms)
+Started GET "/customers" for 127.0.0.1 at 2017-04-04 18:35:15 -0400
+Processing by CustomersController#index as HTML
+  [1m[36mUser Load (0.5ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 ORDER BY "users"."id" ASC LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  Rendering customers/index.html.erb within layouts/application
+  Rendered customers/_pager.html.erb (0.5ms)
+  Rendered customers/_pager.html.erb (0.0ms)
+  Rendered customers/index.html.erb within layouts/application (19.6ms)
+Completed 200 OK in 132ms (Views: 109.0ms | ActiveRecord: 0.5ms)
+Started GET "/customers.json?keywords=bob&page=0" for 127.0.0.1 at 2017-04-04 18:35:15 -0400
+Processing by CustomersController#index as JSON
+  Parameters: {"keywords"=>"bob", "page"=>"0"}
+  [1m[36mUser Load (0.8ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 ORDER BY "users"."id" ASC LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mCustomer Load (2.0ms)[0m  [1m[34mSELECT  "customers".* FROM "customers" WHERE (lower(first_name) like 'bob%' OR lower(last_name) like 'bob%') ORDER BY last_name asc LIMIT $1 OFFSET $2[0m  [["LIMIT", 10], ["OFFSET", 0]]
+Completed 200 OK in 8ms (Views: 3.2ms | ActiveRecord: 2.8ms)
+  [1m[35m (0.5ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (1.0ms)[0m  [1m[35mALTER TABLE "schema_migrations" DISABLE TRIGGER ALL;ALTER TABLE "ar_internal_metadata" DISABLE TRIGGER ALL;ALTER TABLE "users" DISABLE TRIGGER ALL;ALTER TABLE "customers" DISABLE TRIGGER ALL[0m
+  [1m[35m (1.0ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (2.0ms)[0m  [1m[34m          SELECT schemaname || '.' || tablename
+          FROM pg_tables
+          WHERE
+            tablename !~ '_prt_' AND
+            tablename <> 'schema_migrations' AND
+            schemaname = ANY (current_schemas(false))
+[0m
+  [1m[35m (1.0ms)[0m  [1m[34mselect table_name from information_schema.views where table_schema = 'shine_test'[0m
+  [1m[35m (121.3ms)[0m  [1m[35mTRUNCATE TABLE "public"."ar_internal_metadata", "public"."users", "public"."customers" RESTART IDENTITY CASCADE;[0m
+  [1m[35m (1.0ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.5ms)[0m  [1m[35mALTER TABLE "schema_migrations" ENABLE TRIGGER ALL;ALTER TABLE "ar_internal_metadata" ENABLE TRIGGER ALL;ALTER TABLE "users" ENABLE TRIGGER ALL;ALTER TABLE "customers" ENABLE TRIGGER ALL[0m
+  [1m[35m (0.5ms)[0m  [1m[35mCOMMIT[0m

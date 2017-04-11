@@ -1,8 +1,8 @@
 source 'https://rubygems.org'
 
 git_source(:github) do |repo_name|
-  repo_name = "#{repo_name}/#{repo_name}" unless repo_name.include?("/")
-  "https://github.com/#{repo_name}.git"
+	repo_name = "#{repo_name}/#{repo_name}" unless repo_name.include?("/")
+	"https://github.com/#{repo_name}.git"
 end
 
 
@@ -36,13 +36,32 @@ gem 'devise'
 # PS: Chapter 1
 gem 'bower-rails'
 
+# PS: Chapter 3
+gem 'faker'
+
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platform: :mri
+
+  # PS: Chapter 6
+  gem "rspec-rails", '~> 3.0'
+
+  # PS: Chapter 6
+  # START_HIGHLIGHT
+  gem 'poltergeist'
+  # END_HIGHLIGHT
+
+  gem 'database_cleaner'
+
+  gem 'teaspoon-jasmine'
+
 end
+
+gem "angular-rails-templates"
+gem "sprockets", "~> 2.0"
 
 group :development do
   # Access an IRB console on exception pages or by using <%= console %> anywhere in the code.
